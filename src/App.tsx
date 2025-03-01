@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowLeft, RefreshCw, Twitter } from 'lucide-react';
+import { ArrowLeft, RefreshCw } from 'lucide-react';
 import ThreadGenerator from './components/ThreadGenerator';
 import HookSelector from './components/HookSelector';
 import FinalThread from './components/FinalThread';
 import TipsSection from './components/TipsSection';
+import XLogo from './components/XLogo';
 // @ts-ignore
 import { generateThreadContent } from './services/openRouterService';
 
@@ -86,7 +87,7 @@ function App() {
       <header className="bg-gray-800 border-b border-custom-purple p-4">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold text-custom-purple flex items-center">
-            <Twitter className="mr-2" />
+            <XLogo className="mr-2 text-custom-purple" size={24} />
             Boss Fighters Thread Generator
           </h1>
           <button 
