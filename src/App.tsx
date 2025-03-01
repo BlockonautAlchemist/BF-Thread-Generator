@@ -5,6 +5,7 @@ import HookSelector from './components/HookSelector';
 import FinalThread from './components/FinalThread';
 import TipsSection from './components/TipsSection';
 import XLogo from './components/XLogo';
+import AdvantagesSection from './components/AdvantagesSection';
 // @ts-ignore
 import { generateThreadContent } from './services/openRouterService';
 
@@ -131,12 +132,15 @@ function App() {
         {/* Step Content */}
         <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
           {step === 1 && (
-            <ThreadGenerator 
-              gameKnowledge={gameKnowledge} 
-              setGameKnowledge={setGameKnowledge} 
-              generateHooks={generateHooks}
-              isLoading={isLoading}
-            />
+            <>
+              <ThreadGenerator 
+                gameKnowledge={gameKnowledge} 
+                setGameKnowledge={setGameKnowledge} 
+                generateHooks={generateHooks}
+                isLoading={isLoading}
+              />
+              <AdvantagesSection />
+            </>
           )}
           
           {step === 2 && (

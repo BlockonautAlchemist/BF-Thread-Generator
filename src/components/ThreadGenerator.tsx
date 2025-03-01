@@ -18,8 +18,8 @@ const ThreadGenerator: React.FC<ThreadGeneratorProps> = ({
     <div>
       <h2 className="text-xl font-bold mb-4 text-custom-purple">Step 1: Share Your Boss Fighters Knowledge</h2>
       <p className="text-gray-300 mb-4">
-        Input your knowledge about Boss Fighters (game mechanics, perks, economy, strategies, etc.).
-        The more specific details you provide, the better your thread will be!
+        Input your knowledge about Boss Fighters (stick to a specific topic).
+        The more details you provide, the better your thread will be!
       </p>
       
       <div className="mb-4">
