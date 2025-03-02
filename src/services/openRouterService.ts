@@ -70,6 +70,90 @@ function addTransitionToHook(hook: string, hookType: string, threadBody: string)
     : `${hook}. ${randomTransition}`;
 }
 
+// Function to generate a call to action that matches the thread topic
+function generateCallToAction(threadBody: string, gameKnowledge: string): string {
+  console.log('Generating call to action for thread...');
+  
+  // Collection of CTA templates
+  const ctaTemplates = [
+    // Casual, friendly style
+    "Found this helpful? Drop a like, share with your audience, and follow for more Boss Fighters tips and updates! What's your experience with {topic}? Let me know in the comments!",
+    
+    // Direct, action-oriented style
+    "If this helped your game, hit like and share with your Boss Fighters crew! Follow for more content like this. Have you tried {topic} yet? Share your results below!",
+    
+    // Question-focused style
+    "Like and repost if you found this useful! Follow for more Boss Fighters content. What other topic would you like me to cover next? Let me know!",
+    
+    // Enthusiastic style
+    "Enjoying Boss Fighters? Like and share this thread! Follow for more insights. What's your favorite part about {topic}? Drop a comment below!",
+    
+    // Value-proposition style
+    "Found value in this thread? Like, repost, and follow for more Boss Fighters content! What other topic would you like to learn more about?",
+    
+    // Community-focused style
+    "Join our Boss Fighters community by liking, sharing, and following! Let's discuss {topic} together - what's been your approach so far?",
+    
+    // Curiosity-driven style
+    "Curious about more Boss Fighters content? Like and follow for regular updates! What's your biggest question about {topic}?",
+    
+    // Benefit-oriented style
+    "Want to master {topic} in Boss Fighters? Like, share, and follow for more advanced tips! What strategy has worked best for you?",
+    
+    // Conversational style
+    "I'm always sharing new Boss Fighters insights - like and follow to stay updated! How has {topic} changed your gameplay? Share below!"
+  ];
+  
+  // Extract key topics from the thread and user input
+  const combinedText = `${threadBody} ${gameKnowledge}`.toLowerCase();
+  
+  // List of potential topics to detect in the thread
+  const topicKeywords = [
+    { keyword: "boss", replacement: "boss battles" },
+    { keyword: "fighter", replacement: "fighter abilities" },
+    { keyword: "weapon", replacement: "weapons" },
+    { keyword: "arena", replacement: "arenas" },
+    { keyword: "combat", replacement: "combat mechanics" },
+    { keyword: "multiplayer", replacement: "multiplayer features" },
+    { keyword: "vr", replacement: "VR gameplay" },
+    { keyword: "pc", replacement: "PC gameplay" },
+    { keyword: "strategy", replacement: "strategies" },
+    { keyword: "gameplay", replacement: "gameplay features" }
+  ];
+  
+  // Count occurrences of each topic
+  const topicCounts = topicKeywords.map(topic => {
+    // Count how many times the keyword appears in the text
+    const regex = new RegExp(topic.keyword, 'gi');
+    const matches = combinedText.match(regex) || [];
+    return {
+      ...topic,
+      count: matches.length
+    };
+  });
+  
+  // Sort by count (descending) and get the most frequent topic
+  topicCounts.sort((a, b) => b.count - a.count);
+  
+  // Use the most frequent topic, or default if none found
+  let detectedTopic = "these features";
+  if (topicCounts.length > 0 && topicCounts[0].count > 0) {
+    detectedTopic = topicCounts[0].replacement;
+    console.log(`Detected topic for CTA: ${detectedTopic} (mentioned ${topicCounts[0].count} times)`);
+  }
+  
+  // Select a random CTA template
+  const selectedTemplate = ctaTemplates[Math.floor(Math.random() * ctaTemplates.length)];
+  
+  // Replace the topic placeholder with the detected topic
+  const customizedCTA = selectedTemplate.replace("{topic}", detectedTopic);
+  
+  console.log(`Generated CTA: ${customizedCTA}`);
+  
+  // Add a newline before the CTA to separate it from the thread body
+  return `\n\n${customizedCTA}`;
+}
+
 export const generateThreadContent = async (gameKnowledge: string): Promise<ThreadContent> => {
   try {
     console.log('Making request to OpenRouter API...');
@@ -211,6 +295,9 @@ export const generateThreadContent = async (gameKnowledge: string): Promise<Thre
         parsedContent.part5 || ""
       ].filter(part => part.length > 0).join('\n\n');
       
+      // Generate a call to action and append it to the thread body
+      const threadBodyWithCTA = threadBody + generateCallToAction(threadBody, gameKnowledge);
+      
       // Add transition sentences to each hook
       const shitpostWithTransition = addTransitionToHook(parsedContent.shitpost || "", "shitpost", threadBody);
       const informativeWithTransition = addTransitionToHook(parsedContent.informative || "", "informative", threadBody);
@@ -221,7 +308,7 @@ export const generateThreadContent = async (gameKnowledge: string): Promise<Thre
         shitpost: shitpostWithTransition || "Error: Could not generate shitpost hook",
         informative: informativeWithTransition || "Error: Could not generate informative hook",
         viral: viralWithTransition || "Error: Could not generate viral hook",
-        threadBody: threadBody || "Error: Could not generate thread body"
+        threadBody: threadBodyWithCTA || "Error: Could not generate thread body"
       };
     } catch (error) {
       console.error('Failed to parse JSON response:', error);
@@ -234,6 +321,9 @@ export const generateThreadContent = async (gameKnowledge: string): Promise<Thre
         extractContent(content, 'part4') || "",
         extractContent(content, 'part5') || ""
       ].filter(part => part.length > 0).join('\n\n');
+      
+      // Generate a call to action and append it to the thread body
+      const extractedThreadBodyWithCTA = extractedThreadBody + generateCallToAction(extractedThreadBody, gameKnowledge);
       
       const shitpost = extractContent(content, 'shitpost') || "Error: Could not extract shitpost hook";
       const informative = extractContent(content, 'informative') || "Error: Could not extract informative hook";
@@ -248,7 +338,7 @@ export const generateThreadContent = async (gameKnowledge: string): Promise<Thre
         shitpost: shitpostWithTransition,
         informative: informativeWithTransition,
         viral: viralWithTransition,
-        threadBody: extractedThreadBody
+        threadBody: extractedThreadBodyWithCTA
       };
       
       console.log('Extracted content:', extractedContent);
