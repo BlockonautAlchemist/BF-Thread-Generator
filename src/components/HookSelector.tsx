@@ -45,7 +45,7 @@ const HookSelector: React.FC<HookSelectorProps> = ({ hookOptions, selectHook }) 
             <span className="bg-custom-purple text-xs px-2 py-1 rounded-full text-white">Attention-grabbing</span>
           </div>
           <p className="text-gray-300 mb-4 text-sm">
-            Results-focused with curiosity gap. Designed to maximize engagement.
+            Results-focused with curiosity gap. Designed to maximize engagement and grab attention.
           </p>
           <div className="bg-gray-800 rounded p-3 border-l-4 border-custom-purple">
             {hookOptions.viral}
