@@ -18,23 +18,6 @@ const HookSelector: React.FC<HookSelectorProps> = ({ hookOptions, selectHook }) 
       </p>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {/* Shitpost Hook */}
-        <div 
-          onClick={() => selectHook('shitpost')}
-          className="bg-gray-700 border border-gray-600 hover:border-custom-purple rounded-lg p-4 cursor-pointer transition-all hover:transform hover:scale-105"
-        >
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="font-bold text-custom-purple">Shitpost Style</h3>
-            <span className="bg-custom-purple text-xs px-2 py-1 rounded-full text-white">Humorous</span>
-          </div>
-          <p className="text-gray-300 mb-4 text-sm">
-            Funny, exaggerated, and meme-worthy. Great for engaging a casual audience.
-          </p>
-          <div className="bg-gray-800 rounded p-3 border-l-4 border-custom-purple">
-            {hookOptions.shitpost}
-          </div>
-        </div>
-        
         {/* Informative Hook */}
         <div 
           onClick={() => selectHook('informative')}
@@ -66,6 +49,23 @@ const HookSelector: React.FC<HookSelectorProps> = ({ hookOptions, selectHook }) 
           </p>
           <div className="bg-gray-800 rounded p-3 border-l-4 border-custom-purple">
             {hookOptions.viral}
+          </div>
+        </div>
+        
+        {/* Shitpost Hook */}
+        <div 
+          onClick={() => selectHook('shitpost')}
+          className="bg-gray-700 border border-gray-600 hover:border-custom-purple rounded-lg p-4 cursor-pointer transition-all hover:transform hover:scale-105"
+        >
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="font-bold text-custom-purple">Shitpost Style</h3>
+            <span className="bg-custom-purple text-xs px-2 py-1 rounded-full text-white">Humorous</span>
+          </div>
+          <p className="text-gray-300 mb-4 text-sm">
+            Funny, exaggerated, and meme-worthy. Great for engaging a casual audience.
+          </p>
+          <div className="bg-gray-800 rounded p-3 border-l-4 border-custom-purple">
+            {hookOptions.shitpost}
           </div>
         </div>
       </div>
