@@ -1,4 +1,5 @@
 import axios from 'axios';
+import knowledgeBaseService from './knowledgeBaseService';
 
 interface OpenRouterResponse {
   choices: {
@@ -21,9 +22,65 @@ const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 // Debug log for API key (masking most of it for security)
 console.log('API Key loaded:', API_KEY ? `${API_KEY.substring(0, 5)}...${API_KEY.substring(API_KEY.length - 5)}` : 'Not found');
 
+// Function to add transition sentences to hooks
+function addTransitionToHook(hook: string, hookType: string, threadBody: string): string {
+  // If the hook already ends with a colon, it likely already has a transition
+  if (hook.trim().endsWith(':')) {
+    return hook;
+  }
+  
+  // Extract the first few words of the thread body to reference in the transition
+  const firstPartWords = threadBody.split(' ').slice(0, 3).join(' ');
+  
+  // Different transition templates based on hook type
+  const transitions = {
+    shitpost: [
+      "Here's my complete breakdown of why this game is so addictive:",
+      "Let me walk you through exactly why I can't stop playing:",
+      "I've mapped out the entire experience below and it's wild:",
+      "Buckle up, I'm about to share all the reasons this game has taken over my life:",
+      `Let me tell you about ${firstPartWords}...`
+    ],
+    informative: [
+      "Let me break down the fascinating details for you:",
+      "Here's the complete story behind this incredible game:",
+      "I've researched everything you need to know about it:",
+      "Below, I'll share the exact development journey that made this possible:",
+      "I've compiled all the essential information you should know:"
+    ],
+    viral: [
+      "I'm about to reveal everything I've discovered:",
+      "Let me show you exactly what makes this so special:",
+      "I've documented the entire thing below and it's mind-blowing:",
+      "Here's the full story that most players never discover:",
+      "I'll walk you through all the hidden details below:"
+    ]
+  };
+  
+  // Select a random transition for the hook type
+  const transitionOptions = transitions[hookType as keyof typeof transitions] || transitions.informative;
+  const randomTransition = transitionOptions[Math.floor(Math.random() * transitionOptions.length)];
+  
+  // Check if the hook already ends with a period, question mark, or exclamation point
+  const endsWithPunctuation = /[.!?]$/.test(hook.trim());
+  
+  // Add the transition with appropriate spacing and punctuation
+  return endsWithPunctuation 
+    ? `${hook} ${randomTransition}`
+    : `${hook}. ${randomTransition}`;
+}
+
 export const generateThreadContent = async (gameKnowledge: string): Promise<ThreadContent> => {
   try {
     console.log('Making request to OpenRouter API...');
+    
+    // Get relevant knowledge from the knowledge base
+    const relevantKnowledge = await knowledgeBaseService.getRelevantKnowledge(gameKnowledge);
+    console.log('Retrieved relevant knowledge from knowledge base');
+    
+    // Get knowledge base version info
+    const kbVersionInfo = await knowledgeBaseService.getVersionInfo();
+    console.log(`Using knowledge base v${kbVersionInfo.version} (${kbVersionInfo.lastUpdated})`);
     
     // List of models to try
     const models = [
@@ -47,7 +104,13 @@ export const generateThreadContent = async (gameKnowledge: string): Promise<Thre
           You create engaging, informative Twitter threads that educate readers about games.
           Always respond in valid JSON format with the exact keys requested.
           IMPORTANT: Do NOT use any hashtags or emojis in your responses.
-          IMPORTANT: Always be positive and enthusiastic about the game. Never criticize or speak negatively about it.`
+          IMPORTANT: Always be positive and enthusiastic about the game. Never criticize or speak negatively about it.
+          
+          You have access to the following official knowledge about Boss Fighters (v${kbVersionInfo.version}):
+          
+          ${relevantKnowledge}
+          
+          IMPORTANT: This knowledge is provided ONLY for context and accuracy. Your primary focus should be on the user's specific input about the game. The thread you create MUST be centered around what the user has told you about the game, not just general information from the knowledge base.`
         },
         {
           role: 'user',
@@ -55,17 +118,20 @@ export const generateThreadContent = async (gameKnowledge: string): Promise<Thre
           
           Here's what I know about the game: ${gameKnowledge}
           
+          IMPORTANT: The thread MUST focus primarily on the specific aspects of the game I mentioned above. This is the main theme for the thread. Use the official knowledge base only to ensure accuracy and proper terminology.
+          
           Please create:
           
-          1. A funny/shitpost style hook (max 280 characters) - This should be humorous and catch attention with a positive joke or exaggeration about the game. Focus on the game's world, characters, or lore. Be ENTHUSIASTIC and BULLISH about the game - avoid any negative comments. NO hashtags or emojis.
+          1. A funny/shitpost style hook (max 280 characters) - This should be humorous and catch attention with a positive joke or exaggeration about the game, specifically related to what I mentioned. Focus on what I described. Be ENTHUSIASTIC and BULLISH about the game - avoid any negative comments. NO hashtags or emojis.
           
-          2. An informative hook (max 280 characters) - This should promise to educate the reader about the game's background, development, or unique features. NO hashtags or emojis.
+          2. An informative hook (max 280 characters) - This should promise to educate the reader about the specific aspects of the game I mentioned. NO hashtags or emojis.
           
-          3. A viral-optimized hook (max 280 characters) - This should create curiosity about an interesting aspect of the game's world, story, or mechanics. NO hashtags or emojis.
+          3. A viral-optimized hook (max 280 characters) - This should create curiosity about the interesting aspects of the game I mentioned. NO hashtags or emojis.
           
-          4. A thread body with 5 short parts (each part MUST be under 200 characters). The thread should focus on interesting facts, lore, development history, or unique features of Boss Fighters. End with a thoughtful conclusion.
+          4. A thread body with 5 short parts (each part MUST be under 200 characters). The thread should focus on the specific aspects of Boss Fighters that I mentioned. End with a thoughtful conclusion.
           
           IMPORTANT RULES:
+          - The content MUST be centered around what I told you about the game, not just general information
           - Do NOT use any hashtags (e.g., #BossFighters, #Gaming)
           - Do NOT use any emojis
           - Do NOT number the tweets (no "1/" or "2/" at the beginning of each part)
@@ -74,6 +140,8 @@ export const generateThreadContent = async (gameKnowledge: string): Promise<Thre
           - Keep each thread part SHORT (under 200 characters)
           - Focus on being INFORMATIVE about the game itself, not just strategy tips
           - Be POSITIVE and ENTHUSIASTIC about the game - never criticize or speak negatively about it
+          - Use ACCURATE terminology and facts from the official knowledge base
+          - Maintain CONSISTENT naming conventions from the official game
           
           Format your response as a JSON object with these exact keys:
           - "shitpost" (the funny hook)
@@ -143,28 +211,44 @@ export const generateThreadContent = async (gameKnowledge: string): Promise<Thre
         parsedContent.part5 || ""
       ].filter(part => part.length > 0).join('\n\n');
       
-      // Return the content in the expected format
+      // Add transition sentences to each hook
+      const shitpostWithTransition = addTransitionToHook(parsedContent.shitpost || "", "shitpost", threadBody);
+      const informativeWithTransition = addTransitionToHook(parsedContent.informative || "", "informative", threadBody);
+      const viralWithTransition = addTransitionToHook(parsedContent.viral || "", "viral", threadBody);
+      
+      // Return the content in the expected format with transitions
       return {
-        shitpost: parsedContent.shitpost || "Error: Could not generate shitpost hook",
-        informative: parsedContent.informative || "Error: Could not generate informative hook",
-        viral: parsedContent.viral || "Error: Could not generate viral hook",
+        shitpost: shitpostWithTransition || "Error: Could not generate shitpost hook",
+        informative: informativeWithTransition || "Error: Could not generate informative hook",
+        viral: viralWithTransition || "Error: Could not generate viral hook",
         threadBody: threadBody || "Error: Could not generate thread body"
       };
     } catch (error) {
       console.error('Failed to parse JSON response:', error);
       
       // Try to extract content using regex if JSON parsing fails
+      const extractedThreadBody = [
+        extractContent(content, 'part1') || "",
+        extractContent(content, 'part2') || "",
+        extractContent(content, 'part3') || "",
+        extractContent(content, 'part4') || "",
+        extractContent(content, 'part5') || ""
+      ].filter(part => part.length > 0).join('\n\n');
+      
+      const shitpost = extractContent(content, 'shitpost') || "Error: Could not extract shitpost hook";
+      const informative = extractContent(content, 'informative') || "Error: Could not extract informative hook";
+      const viral = extractContent(content, 'viral') || "Error: Could not extract viral hook";
+      
+      // Add transition sentences to each extracted hook
+      const shitpostWithTransition = addTransitionToHook(shitpost, "shitpost", extractedThreadBody);
+      const informativeWithTransition = addTransitionToHook(informative, "informative", extractedThreadBody);
+      const viralWithTransition = addTransitionToHook(viral, "viral", extractedThreadBody);
+      
       const extractedContent = {
-        shitpost: extractContent(content, 'shitpost') || "Error: Could not extract shitpost hook",
-        informative: extractContent(content, 'informative') || "Error: Could not extract informative hook",
-        viral: extractContent(content, 'viral') || "Error: Could not extract viral hook",
-        threadBody: [
-          extractContent(content, 'part1') || "",
-          extractContent(content, 'part2') || "",
-          extractContent(content, 'part3') || "",
-          extractContent(content, 'part4') || "",
-          extractContent(content, 'part5') || ""
-        ].filter(part => part.length > 0).join('\n\n')
+        shitpost: shitpostWithTransition,
+        informative: informativeWithTransition,
+        viral: viralWithTransition,
+        threadBody: extractedThreadBody
       };
       
       console.log('Extracted content:', extractedContent);

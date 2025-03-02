@@ -6,6 +6,7 @@ import FinalThread from './components/FinalThread';
 import TipsSection from './components/TipsSection';
 import XLogo from './components/XLogo';
 import AdvantagesSection from './components/AdvantagesSection';
+import KnowledgeBaseInfo from './components/KnowledgeBaseInfo';
 // @ts-ignore
 import { generateThreadContent } from './services/openRouterService';
 
@@ -164,8 +165,11 @@ function App() {
 
       {/* Footer */}
       <footer className="bg-gray-800 border-t border-custom-purple p-4 mt-auto">
-        <div className="container mx-auto text-center text-gray-400 text-sm">
-          © 2025 Boss Fighters Thread Generator | Create engaging threads to share your gaming insights
+        <div className="container mx-auto text-center">
+          <div className="text-gray-400 text-sm mb-1">
+            © 2025 Boss Fighters Thread Generator | Create engaging threads to share your gaming insights
+          </div>
+          <KnowledgeBaseInfo className="text-center" />
         </div>
       </footer>
     </div>

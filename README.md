@@ -10,6 +10,7 @@ A web application that generates Twitter thread content about the game Boss Figh
   - Viral-optimized
 - Create a complete thread body with informative content
 - Customize the content based on your knowledge of the game
+- **NEW**: Knowledge base integration for accurate game information
 
 ## Setup
 
@@ -40,6 +41,45 @@ The application uses the OpenRouter API to access Claude 3.7 Sonnet (and other A
 3. Select your favorite hook
 4. View and copy your complete Twitter thread
 
+## Knowledge Base Integration
+
+The application now includes a knowledge base system that ensures all generated content is accurate and consistent with the official game information.
+
+### How the Knowledge Base Works
+
+1. The knowledge base is stored in a Markdown file (`public/knowledge/BossFightersWiki_ChunksMD.md`)
+2. When generating content, the system:
+   - Analyzes the user's input to identify relevant game topics
+   - Retrieves accurate information from the knowledge base
+   - Provides this information to the AI model to ensure factual accuracy
+   - Maintains consistent terminology and naming conventions
+
+### Updating the Knowledge Base
+
+As new game content is released, you can update the knowledge base:
+
+1. Manually edit the `public/knowledge/BossFightersWiki_ChunksMD.md` file
+2. Update the version number using the provided script:
+   ```
+   npm run update-kb 1.0.1
+   ```
+   (Replace `1.0.1` with the new version number)
+
+3. The version and last updated date will be automatically updated
+
+### Knowledge Base Structure
+
+The knowledge base is organized into chunks, each containing specific information about the game:
+- Game Overview
+- Gameplay Highlights
+- Boss Gameplay
+- Fighter Gameplay
+- Technology Requirements
+- Economy System
+- And more
+
+Each chunk is separated by a delimiter and contains structured information that the AI can reference when generating content.
+
 ## Technologies Used
 
 - React
@@ -47,6 +87,7 @@ The application uses the OpenRouter API to access Claude 3.7 Sonnet (and other A
 - Vite
 - OpenRouter API (accessing Claude 3.7 Sonnet)
 - Tailwind CSS
+- Knowledge Base System
 
 ## Note on API Usage
 
@@ -54,5 +95,4 @@ This application requires an OpenRouter API key to function. API usage may incur
 
 ## License
 
-MIT # BF-Thread-Generator
-# BF-Thread-Generator
+MIT
