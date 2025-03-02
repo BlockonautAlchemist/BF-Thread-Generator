@@ -93,6 +93,33 @@ Each chunk is separated by a delimiter and contains structured information that 
 
 This application requires an OpenRouter API key to function. API usage may incur costs depending on your OpenRouter plan.
 
+## Deployment
+
+### GitHub Pages Deployment
+
+This application is configured for deployment to GitHub Pages. To deploy:
+
+1. Push your code to GitHub
+2. Go to your repository settings
+3. Navigate to "Pages" in the sidebar
+4. Under "Build and deployment", select:
+   - Source: "GitHub Actions"
+5. The workflow will automatically build and deploy your site
+
+The GitHub Actions workflow will:
+1. Install dependencies
+2. Build the application with the correct base path
+3. Deploy the built files to GitHub Pages
+
+After deployment, your site will be available at `https://[your-username].github.io/[repository-name]/`
+
+### Troubleshooting Deployment
+
+If you see a blank white screen after deployment:
+- Check browser console for errors
+- Ensure all paths in the code are relative (starting with `./`) rather than absolute (starting with `/`)
+- Verify that the knowledge base file is correctly included in the build
+
 ## License
 
 MIT

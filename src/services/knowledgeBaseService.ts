@@ -25,7 +25,7 @@ class KnowledgeBaseService {
   private knowledgeBase: KnowledgeBase | null = null;
   private readonly knowledgeBasePath: string;
   
-  constructor(knowledgeBasePath: string = '/knowledge/BossFightersWiki_ChunksMD.md') {
+  constructor(knowledgeBasePath: string = './knowledge/BossFightersWiki_ChunksMD.md') {
     this.knowledgeBasePath = knowledgeBasePath;
   }
   
