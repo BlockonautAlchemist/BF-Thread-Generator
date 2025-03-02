@@ -14,7 +14,7 @@ const AdvantagesSection: React.FC = () => {
             </svg>
           </div>
           <p className="text-gray-300">
-            Trained specifically on top performing <XLogo className="inline mx-1" size={12} /> posts
+            Trained specifically on general Boss Fighters knowledge
           </p>
         </div>
         

@@ -16,11 +16,30 @@ interface ThreadContent {
   threadBody: string;
 }
 
-const API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
+// Try to get API key from environment variables or localStorage
+let API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
+
+// If not found in env vars, try localStorage
+if (!API_KEY) {
+  API_KEY = localStorage.getItem('openrouter_api_key') || '';
+}
+
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 // Debug log for API key (masking most of it for security)
 console.log('API Key loaded:', API_KEY ? `${API_KEY.substring(0, 5)}...${API_KEY.substring(API_KEY.length - 5)}` : 'Not found');
+
+// Function to set API key (used when user provides it manually)
+export const setApiKey = (key: string): void => {
+  API_KEY = key;
+  localStorage.setItem('openrouter_api_key', key);
+  console.log('API Key updated:', API_KEY ? `${API_KEY.substring(0, 5)}...${API_KEY.substring(API_KEY.length - 5)}` : 'Not found');
+};
+
+// Function to check if API key is available
+export const hasApiKey = (): boolean => {
+  return !!API_KEY;
+};
 
 // Function to add transition sentences to hooks
 function addTransitionToHook(hook: string, hookType: string, threadBody: string): string {

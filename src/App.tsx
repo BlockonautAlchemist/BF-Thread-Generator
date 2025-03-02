@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, RefreshCw } from 'lucide-react';
 import ThreadGenerator from './components/ThreadGenerator';
 import HookSelector from './components/HookSelector';
@@ -8,7 +8,7 @@ import XLogo from './components/XLogo';
 import AdvantagesSection from './components/AdvantagesSection';
 import KnowledgeBaseInfo from './components/KnowledgeBaseInfo';
 // @ts-ignore
-import { generateThreadContent } from './services/openRouterService';
+import { generateThreadContent, hasApiKey, setApiKey } from './services/openRouterService';
 
 function App() {
   const [step, setStep] = useState(1);
@@ -22,9 +22,32 @@ function App() {
   const [threadBody, setThreadBody] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [apiKey, setApiKeyState] = useState('');
+  const [showApiKeyForm, setShowApiKeyForm] = useState(false);
+  
+  // Check if API key is available on component mount
+  useEffect(() => {
+    setShowApiKeyForm(!hasApiKey());
+  }, []);
+  
+  const handleApiKeySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (apiKey.trim()) {
+      setApiKey(apiKey.trim());
+      setShowApiKeyForm(false);
+      setError('');
+    }
+  };
   
   const generateHooks = async () => {
     if (!gameKnowledge.trim()) return;
+    
+    // Check if API key is available
+    if (!hasApiKey()) {
+      setShowApiKeyForm(true);
+      setError('OpenRouter API key is required to generate content.');
+      return;
+    }
     
     setIsLoading(true);
     setError('');
@@ -51,6 +74,12 @@ function App() {
       
       if (err.message) {
         errorMessage += ` Error: ${err.message}`;
+      }
+      
+      // If we get a 401 error, show the API key form
+      if (err.response && err.response.status === 401) {
+        setShowApiKeyForm(true);
+        errorMessage = 'Invalid API key. Please enter a valid OpenRouter API key.';
       }
       
       setError(errorMessage);
@@ -127,6 +156,43 @@ function App() {
         {error && (
           <div className="bg-red-900/50 border border-red-500 text-red-200 p-4 rounded-lg mb-6">
             <p>{error}</p>
+          </div>
+        )}
+        
+        {/* API Key Form */}
+        {showApiKeyForm && (
+          <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+            <h2 className="text-xl font-bold mb-4 text-custom-purple">Enter OpenRouter API Key</h2>
+            <p className="text-gray-300 mb-4">
+              This app requires an OpenRouter API key to generate content. Your key is stored locally in your browser and never sent to our servers.
+            </p>
+            <form onSubmit={handleApiKeySubmit} className="space-y-4">
+              <div>
+                <label htmlFor="apiKey" className="block text-sm font-medium text-gray-300 mb-1">
+                  API Key
+                </label>
+                <input
+                  type="password"
+                  id="apiKey"
+                  value={apiKey}
+                  onChange={(e) => setApiKeyState(e.target.value)}
+                  className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-custom-purple"
+                  placeholder="sk-or-..."
+                  required
+                />
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  className="w-full bg-custom-purple hover:opacity-90 py-2 px-4 rounded-md font-medium transition-colors text-white"
+                >
+                  Save API Key
+                </button>
+              </div>
+              <p className="text-sm text-gray-400">
+                Don't have an API key? <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer" className="text-custom-purple hover:underline">Get one from OpenRouter</a>
+              </p>
+            </form>
           </div>
         )}
 
