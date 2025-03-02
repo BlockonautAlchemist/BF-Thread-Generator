@@ -113,17 +113,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-secondary text-white">
       {/* Header */}
-      <header className="bg-gray-800 border-b border-custom-purple p-4">
+      <header className="bg-custom-darker border-b border-custom-purple p-4 shadow-layered">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-custom-purple flex items-center">
+          <h1 className="text-2xl font-bold text-custom-purple flex items-center animate-enter">
             <XLogo className="mr-2 text-custom-purple" size={24} />
             Boss Fighters Thread Generator
           </h1>
           <button 
             onClick={resetForm}
-            className="flex items-center bg-custom-purple hover:opacity-90 px-3 py-1 rounded-md text-sm transition-colors text-white"
+            className="btn-primary btn-micro flex items-center hover:bg-opacity-90 px-3 py-1 rounded-md text-sm transition-colors text-white animate-enter animate-enter-delay-1"
           >
             <RefreshCw size={16} className="mr-1" /> New Thread
           </button>
@@ -133,20 +133,20 @@ function App() {
       {/* Main Content */}
       <main className="container mx-auto p-4">
         {/* Progress Indicator */}
-        <div className="mb-8">
+        <div className="mb-8 animate-enter">
           <div className="flex justify-between items-center mb-2">
             <button 
               onClick={goBack} 
               disabled={step === 1}
-              className={`flex items-center ${step === 1 ? 'text-gray-600 cursor-not-allowed' : 'text-custom-purple hover:text-gray-300'}`}
+              className={`flex items-center transition-all duration-250 ${step === 1 ? 'text-gray-600 cursor-not-allowed' : 'text-custom-purple hover:text-custom-cyan hover:-translate-y-0.5'}`}
             >
               <ArrowLeft size={16} className="mr-1" /> Back
             </button>
             <div className="text-sm text-gray-400">Step {step} of 3</div>
           </div>
-          <div className="w-full bg-gray-700 h-2 rounded-full">
+          <div className="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
             <div 
-              className="bg-custom-purple h-2 rounded-full transition-all duration-300"
+              className="bg-gradient-accent h-2 rounded-full transition-all duration-500 ease-in-out"
               style={{ width: `${(step / 3) * 100}%` }}
             ></div>
           </div>
@@ -154,14 +154,14 @@ function App() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-900/50 border border-red-500 text-red-200 p-4 rounded-lg mb-6">
+          <div className="bg-red-900/50 border border-red-500 text-red-200 p-4 rounded-lg mb-6 animate-enter shadow-subtle">
             <p>{error}</p>
           </div>
         )}
         
         {/* API Key Form */}
         {showApiKeyForm && (
-          <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+          <div className="card-modern bg-gray-800 rounded-lg shadow-layered p-6 mb-8 animate-enter">
             <h2 className="text-xl font-bold mb-4 text-custom-purple">Enter OpenRouter API Key</h2>
             <p className="text-gray-300 mb-4">
               This app requires an OpenRouter API key to generate content. Your key is stored locally in your browser and never sent to our servers.
@@ -176,7 +176,7 @@ function App() {
                   id="apiKey"
                   value={apiKey}
                   onChange={(e) => setApiKeyState(e.target.value)}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-custom-purple"
+                  className="input-modern w-full"
                   placeholder="sk-or-..."
                   required
                 />
@@ -184,20 +184,20 @@ function App() {
               <div>
                 <button
                   type="submit"
-                  className="w-full bg-custom-purple hover:opacity-90 py-2 px-4 rounded-md font-medium transition-colors text-white"
+                  className="btn-primary w-full py-2 px-4 rounded-md font-medium"
                 >
                   Save API Key
                 </button>
               </div>
               <p className="text-sm text-gray-400">
-                Don't have an API key? <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer" className="text-custom-purple hover:underline">Get one from OpenRouter</a>
+                Don't have an API key? <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer" className="text-custom-cyan hover:text-custom-gold hover:underline transition-colors duration-250">Get one from OpenRouter</a>
               </p>
             </form>
           </div>
         )}
 
         {/* Step Content */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+        <div className="card-modern bg-gray-800 rounded-lg shadow-layered p-6 mb-8 animate-enter">
           {step === 1 && (
             <>
               <ThreadGenerator 
@@ -230,12 +230,12 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 border-t border-custom-purple p-4 mt-auto">
+      <footer className="bg-custom-darker border-t border-custom-purple p-4 mt-auto shadow-layered">
         <div className="container mx-auto text-center">
-          <div className="text-gray-400 text-sm mb-1">
+          <div className="text-gray-400 text-sm mb-1 animate-enter">
             © 2025 Boss Fighters Thread Generator | Create engaging threads to share your gaming insights
           </div>
-          <KnowledgeBaseInfo className="text-center" />
+          <KnowledgeBaseInfo className="text-center animate-enter animate-enter-delay-1" />
         </div>
       </footer>
     </div>

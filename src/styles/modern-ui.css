@@ -1,0 +1,208 @@
+/* Modern UI Enhancements for Boss Fighters Thread Generator */
+
+/* ===== 1. Subtle Gradient Effects ===== */
+
+/* Background gradients */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #280836 0%, #3a0d4f 100%);
+}
+
+.bg-gradient-secondary {
+  background: linear-gradient(135deg, #1a0521 0%, #280836 50%, #3a0d4f 100%);
+}
+
+/* Card backgrounds with subtle gradient borders */
+.card-modern {
+  background: linear-gradient(to bottom, rgba(40, 8, 54, 0.8), rgba(26, 5, 33, 0.9));
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.card-modern::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: linear-gradient(135deg, #fed66d 0%, #5cfbf7 50%, #ad19d1 100%);
+  z-index: -1;
+  border-radius: 0.5rem;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.card-modern:hover::before {
+  opacity: 0.5;
+}
+
+/* Gradient overlays for buttons and interactive elements */
+.btn-gradient {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.btn-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #ad19d1 0%, #5cfbf7 100%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-gradient:hover::before {
+  opacity: 0.2;
+}
+
+/* ===== 2. Professional Animations ===== */
+
+/* Micro-interactions for buttons */
+.btn-micro {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-micro:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(173, 25, 209, 0.3);
+}
+
+.btn-micro:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Fade/slide-in animations */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-slide-in {
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+/* Staggered animations for lists */
+.stagger-item {
+  opacity: 0;
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.1s; }
+.stagger-item:nth-child(2) { animation-delay: 0.2s; }
+.stagger-item:nth-child(3) { animation-delay: 0.3s; }
+
+/* Loading state animations */
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.loading-pulse {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* ===== 3. Improved Hover Effects ===== */
+
+/* Elegant hover states */
+.hover-elegant {
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+}
+
+.hover-elegant:hover {
+  border-color: rgba(173, 25, 209, 0.3);
+  box-shadow: 0 0 15px rgba(173, 25, 209, 0.15);
+}
+
+/* Primary action glow */
+.hover-primary {
+  transition: all 0.25s ease;
+}
+
+.hover-primary:hover {
+  box-shadow: 0 0 12px rgba(92, 251, 247, 0.5);
+  border-color: rgba(92, 251, 247, 0.7);
+}
+
+/* Secondary action glow */
+.hover-secondary {
+  transition: all 0.25s ease;
+}
+
+.hover-secondary:hover {
+  box-shadow: 0 0 12px rgba(254, 214, 109, 0.5);
+  border-color: rgba(254, 214, 109, 0.7);
+}
+
+/* ===== 4. Enhanced Visual Hierarchy ===== */
+
+/* Shadow layering for depth */
+.shadow-layered {
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-subtle {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Attention-drawing animations */
+@keyframes subtlePulse {
+  0% { box-shadow: 0 0 0 rgba(173, 25, 209, 0); }
+  50% { box-shadow: 0 0 10px rgba(173, 25, 209, 0.3); }
+  100% { box-shadow: 0 0 0 rgba(173, 25, 209, 0); }
+}
+
+.pulse-attention {
+  animation: subtlePulse 2s infinite;
+}
+
+/* ===== 5. Performance Optimizations ===== */
+
+/* Hardware acceleration for smoother animations */
+.hw-accelerated {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  
+  .fade-slide-in,
+  .stagger-item {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .btn-micro:hover {
+    transform: translateY(-1px) scale(1.01);
+  }
+  
+  .card-modern::before {
+    opacity: 0.2;
+  }
+} 
