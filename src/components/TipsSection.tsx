@@ -15,7 +15,7 @@ const TipsSection: React.FC = () => {
     },
     {
       icon: <Clock className="text-custom-purple" />,
-      title: "Post about Boss Fighters announcements or Medium articles",
+      title: "Post About Announcements",
       description: "Be the first to break down the latest news and updates. Also share when players are most active."
     },
     {
