@@ -25,8 +25,14 @@ class KnowledgeBaseService {
   private knowledgeBase: KnowledgeBase | null = null;
   private readonly knowledgeBasePath: string;
   
-  constructor(knowledgeBasePath: string = './knowledge/BossFightersWiki_ChunksMD.md') {
-    this.knowledgeBasePath = knowledgeBasePath;
+  constructor() {
+    // Determine the base path based on the current URL
+    const basePath = window.location.pathname.includes('/BF-Thread-Generator') 
+      ? '/BF-Thread-Generator/knowledge/BossFightersWiki_ChunksMD.md'
+      : '/knowledge/BossFightersWiki_ChunksMD.md';
+    
+    this.knowledgeBasePath = basePath;
+    console.log('Knowledge base path set to:', this.knowledgeBasePath);
   }
   
   /**
@@ -40,22 +46,34 @@ class KnowledgeBaseService {
       }
       
       // Fetch the markdown file using fetch API (browser compatible)
+      console.log(`Attempting to load knowledge base from: ${this.knowledgeBasePath}`);
       const response = await fetch(this.knowledgeBasePath);
       if (!response.ok) {
-        throw new Error(`Failed to load knowledge base: ${response.status} ${response.statusText}`);
+        console.error(`Failed to load knowledge base: ${response.status} ${response.statusText}`);
+        // Try alternative path if the first one fails
+        const altPath = `${window.location.pathname.replace(/\/$/, '')}/knowledge/BossFightersWiki_ChunksMD.md`;
+        console.log(`Trying alternative path: ${altPath}`);
+        const altResponse = await fetch(altPath);
+        if (!altResponse.ok) {
+          throw new Error(`Failed to load knowledge base from both paths: ${response.status} ${response.statusText}`);
+        }
+        return this.parseChunkedMarkdown(await altResponse.text());
       }
       
       const content = await response.text();
       
       // Parse the markdown content
-      const kb = this.parseChunkedMarkdown(content);
-      this.knowledgeBase = kb;
+      this.knowledgeBase = this.parseChunkedMarkdown(content);
       
-      console.log(`Knowledge base loaded: ${kb.chunks.length} chunks`);
-      return kb;
+      // Generate keywords for the knowledge base
+      this.generateKeywords(this.knowledgeBase);
+      
+      console.log('Knowledge base loaded successfully:', this.knowledgeBase);
+      
+      return this.knowledgeBase;
     } catch (error) {
-      console.error('Failed to load knowledge base:', error);
-      // Return an empty knowledge base as fallback
+      console.error('Error loading knowledge base:', error);
+      // Return an empty knowledge base in case of error
       return this.createEmptyKnowledgeBase();
     }
   }

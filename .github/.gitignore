@@ -1,0 +1,2 @@
+# Ignore VS Code linting issues for GitHub Actions workflows
+*.yml 

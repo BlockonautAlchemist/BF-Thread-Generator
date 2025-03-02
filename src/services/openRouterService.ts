@@ -28,6 +28,7 @@ const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 // Debug log for API key (masking most of it for security)
 console.log('API Key loaded:', API_KEY ? `${API_KEY.substring(0, 5)}...${API_KEY.substring(API_KEY.length - 5)}` : 'Not found');
+console.log('Environment variables available:', Object.keys(import.meta.env).join(', '));
 
 // Function to set API key (used when user provides it manually)
 export const setApiKey = (key: string): void => {
