@@ -66,7 +66,7 @@ const FinalThread: React.FC<FinalThreadProps> = ({ selectedHook, threadBody }) =
       </div>
       
       <p className="text-sm text-gray-400 text-center italic">
-        Remember to add relevant images and engage with replies to maximize visibility!
+        Remember to change words to match your authentic tone and voice. Add relevant images and engage with replies to maximize visibility!
       </p>
     </div>
   );

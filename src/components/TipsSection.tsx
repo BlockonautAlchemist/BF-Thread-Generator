@@ -11,12 +11,12 @@ const TipsSection: React.FC = () => {
     {
       icon: <Lightbulb className="text-custom-purple" />,
       title: "Personalize Your Language",
-      description: "Match your authentic tone and voice. Readers can tell when you're being genuine, and they'll connect more with your content."
+      description: "Change wording when needed. Match your authentic tone and voice. Add @BossFightersX in the hook to increase visibility."
     },
     {
       icon: <Clock className="text-custom-purple" />,
-      title: "Post at Peak Times",
-      description: "Share when Boss Fighters players are most active - typically weekday evenings and weekend afternoons in your target audience's timezone."
+      title: "Post about Boss Fighters announcements or Medium articles",
+      description: "Be the first to break down the latest news and updates. Also share when players are most active."
     },
     {
       icon: <MessageCircle className="text-custom-purple" />,
