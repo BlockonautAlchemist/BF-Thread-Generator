@@ -247,6 +247,8 @@ export const generateThreadContent = async (gameKnowledge: string): Promise<Thre
           - Be POSITIVE and ENTHUSIASTIC about the game - never criticize or speak negatively about it
           - Use ACCURATE terminology and facts from the official knowledge base
           - Maintain CONSISTENT naming conventions from the official game
+          - Avoid complex adjectives and fancy words - write like you're talking to a friend
+          - Use simple, clear language instead of marketing-speak or overly formal terms
           
           Format your response as a JSON object with these exact keys:
           - "shitpost" (the funny hook)
